@@ -20,18 +20,12 @@
   .big{font-size:30px;font-weight:700;}
   .note{font-size:13px;color:#6b7280;margin-top:8px;}
   .prognosi{margin-top:20px; border-top: 1px solid #eee; padding-top: 20px;}
-  .grid{display:grid; grid-template-columns:repeat(9,1fr); gap:10px; margin-top:15px;}
-  .year{background:#fff;padding:10px;border-radius:8px;border:1px solid #eef2f5;text-align:center;font-size:13px;}
-  .year b{display:block;color:#d64545;font-size:18px; margin-top:4px;}
   .all-values{margin-top:16px; font-size:13px; display:flex; flex-wrap:wrap; gap:10px;}
   .kv{background:#fff;padding:12px;border-radius:10px;border:1px solid #f0f2f4; min-width:135px; transition: all 0.3s;}
-  .arcanaBox{background:#f8f5ff; border-left:6px solid #5b2fa6; padding:18px; border-radius:12px; max-width:550px; box-shadow: 0 4px 12px rgba(91,47,166,0.04);}
+  .arcanaBox{background:#f8f5ff; border-left:6px solid #5b2fa6; padding:18px; border-radius:12px; max-width:100%; box-shadow: 0 4px 12px rgba(91,47,166,0.04);}
   .arcanaBox h4{margin:0 0 8px; color:#5b2fa6; font-size:17px; font-weight: 700;}
   .arcanaBox p{margin:0; color:#4a5568; font-size:14.5px; line-height:1.5;}
-  .controls{display:flex;gap:16px;align-items:center; flex: 1;}
   input[type=range] { flex: 1; accent-color: #5b2fa6; cursor: pointer; }
-
-  /* Lectura final */
   .letturaBox{background:#fff; border-left:6px solid #5b2fa6; padding:22px; border-radius:12px; margin-top:24px; box-shadow: 0 6px 18px rgba(20,30,50,0.04);}
   .letturaBox > h4{margin:0 0 16px; color:#5b2fa6; font-size:17px; font-weight:700; letter-spacing:0.3px;}
   .letturaRow{display:flex;gap:12px;flex-wrap:wrap; margin-bottom:16px;}
@@ -61,31 +55,29 @@
       <div class="box">
         <h3>Propósito Personal</h3>
         <div id="scopoPersonale" class="big">-</div>
-        <div id="terraCielo" class="note"></div>
+        <div id="notePersonale" class="note"></div>
       </div>
       <div class="box">
         <h3>Propósito Social</h3>
         <div id="scopoSociale" class="big">-</div>
-        <div id="discendenze" class="note"></div>
+        <div id="noteSociale" class="note"></div>
       </div>
       <div class="box">
         <h3>Propósito Espiritual</h3>
         <div id="scopoSpirituale" class="big">-</div>
-        <div class="note">Equilibrio armonizado de los dos propósitos</div>
+        <div id="noteSpirituale" class="note"></div>
       </div>
     </div>
 
     <div class="prognosi">
       <h3 style="margin:0 0 16px;color:#324155; font-size: 18px;">Pronóstico Evolutivo (Años 0 → 80)</h3>
 
-      <div style="display:flex; gap:24px; align-items: flex-start; margin-bottom:20px;">
-        <div class="controls">
-          <div style="display:flex; flex-direction:column; gap:8px; width: 100%;">
-            <label style="font-weight: 600; color: #5b2fa6;">Selecciona Edad:</label>
-            <div style="display:flex; align-items:center; gap:12px;">
-              <input id="ageSlider" type="range" min="0" max="80" value="0" oninput="showAge(this.value)">
-              <div id="selectedAge" style="font-weight:700; font-size: 20px; color:#222; min-width: 80px; text-align: right;">0</div>
-            </div>
+      <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:20px;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-weight: 600; color: #5b2fa6;">Selecciona Edad:</label>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <input id="ageSlider" type="range" min="0" max="80" value="0" oninput="showAge(this.value)" style="flex:1; accent-color:#5b2fa6; cursor:pointer;">
+            <div id="selectedAge" style="font-weight:700; font-size: 20px; color:#222; min-width: 80px; text-align: right;">0</div>
           </div>
         </div>
 
@@ -94,8 +86,6 @@
           <p id="arcanaDesc">Mueve el slider para visualizar la energía predominante en el año seleccionado.</p>
         </div>
       </div>
-
-      <div id="yearGrid" class="grid"></div>
 
       <div style="margin-top:24px; border-top: 1px solid #eee; padding-top: 20px;">
         <h4 style="margin:0 0 12px; color: #6b7280; font-weight: 500;">Lista completa de ciclos anuales</h4>
@@ -131,7 +121,6 @@
 </div>
 
 <script>
-/* ── CÁLCULO ── */
 function reduceTo22(n) {
   n = Math.abs(Math.floor(Number(n) || 0));
   if (n === 0) return 0;
@@ -180,14 +169,13 @@ function buildAgeSeries_det(letters) {
   return ages;
 }
 
-/* ── MAPA DE ARCANOS (summary largo, usado por el slider) ── */
 const arcanaMap = {
    0: {name: "0 – El Loco",              summary: "Inicio puro, potencial infinito y libertad de los esquemas. Invitación a confiar en lo desconocido y avanzar con inocencia."},
    1: {name: "I – El Mago",              summary: "Capacidad de manifestar tus deseos. Tienes todas las herramientas para crear tu realidad: actúa ahora."},
    2: {name: "II – La Sacerdotisa",      summary: "Tiempo de escucha, intuición y secretos. No fuerces la acción; observa lo que se oculta detrás de las apariencias."},
    3: {name: "III – La Emperatriz",      summary: "Energía de abundancia, creatividad y nutrición. Un período fértil para proyectos que requieren cuidado amoroso."},
    4: {name: "IV – El Emperador",        summary: "Estabilidad, poder y organización. Es el momento de construir bases sólidas y actuar con disciplina y lógica."},
-   5: {name: "V – El Hierofante",        summary: "Guía espiritual, instrucción y respeto por las tradiciones. Busca la sabiduría a través del estudio o un mentor."},
+   5: {name: "V – El Papa",              summary: "Guía espiritual, educación y respeto por las tradiciones. Busca la sabiduría a través del estudio o un mentor."},
    6: {name: "VI – Los Enamorados",      summary: "Elecciones del corazón, armonía y relaciones. Reflexiona sobre tus valores antes de tomar una decisión importante."},
    7: {name: "VII – El Carro",           summary: "Victoria a través del control y la dirección. Mantén el rumbo con determinación para superar cada obstáculo."},
    8: {name: "VIII – La Fuerza",         summary: "Dominio de las pasiones instintivas a través de la dulzura y el coraje interior. Eres más fuerte de lo que crees."},
@@ -198,43 +186,41 @@ const arcanaMap = {
   13: {name: "XIII – La Muerte",         summary: "Fin de un ciclo y transformación necesaria. Suelta lo que ha muerto para permitir que la nueva vida emerja."},
   14: {name: "XIV – La Templanza",       summary: "Moderación, sanación y flujo. Integra las polaridades opuestas con paciencia para encontrar la paz interior."},
   15: {name: "XV – El Diablo",           summary: "Confrontación con las propias sombras, deseos y ataduras materiales. Sé consciente de lo que te tiene encadenado."},
-  16: {name: "XVI – La Torre",           summary: "Ruptura repentina de certezas ficticias. Un derrumbe necesario que libera el espacio para construir sobre la verdad."},
-  17: {name: "XVII – Las Estrellas",     summary: "Esperanza recuperada, inspiración y protección. Sigue tus sueños con confianza: el universo te sostiene."},
-  18: {name: "XVIII – La Luna",          summary: "Intuiciones poderosas pero riesgo de ilusiones. Navega el reino de las emociones y el inconsciente con prudencia."},
+  16: {name: "XVI – La Torre",           summary: "Ruptura repentina de certezas ficticias. Un derrumbe necesario que libera espacio para construir sobre la verdad."},
+  17: {name: "XVII – Las Estrellas",     summary: "Esperanza renovada, inspiración y protección. Sigue tus sueños con confianza: el universo te sostiene."},
+  18: {name: "XVIII – La Luna",          summary: "Intuiciones potentes pero riesgo de ilusiones. Navega el reino de las emociones y el inconsciente con prudencia."},
   19: {name: "XIX – El Sol",             summary: "Éxito, vitalidad y alegría radiante. Todo aparece claro: disfruta este momento de éxito y calidez humana."},
   20: {name: "XX – El Juicio",           summary: "Despertar y balances profundos. Es tiempo de responder a tu llamado interior y renacer a una nueva vida."},
   21: {name: "XXI – El Mundo",           summary: "Realización total y completamiento de un gran objetivo. Estás en armonía con el universo, todo está cumplido."},
   22: {name: "XXII – El Loco Iniciático",summary: "Libertad absoluta y fin del viaje que se convierte en un nuevo comienzo. Confianza ciega en el flujo cósmico del destino."}
 };
 
-/* ── LECTURA POÉTICA (separada del arcanaMap, no toca el slider) ── */
 const arcanaPoetic = {
-   0: {intro: "Llegaste al mundo con el signo del Loco: un alma que no conoce fronteras trazadas por otros.", body: "Dentro de ti vive un potencial que no se deja encadenar. Tu fuerza no está en la certeza, sino en la capacidad de volver a empezar cada vez como si fuera la primera. Tienes una libertad rara: la de no tener que demostrar nada a nadie.", seeds: ["Confía en el paso que aún no sabes explicar.", "Deja que lo desconocido sea tu territorio natural.", "Cada comienzo ya es un cumplimiento."]},
-   1: {intro: "El Mago es tu firma en el universo: estás aquí para transformar la intención en realidad.", body: "Posees todas las herramientas — mente, corazón, palabra, acción. Tu propósito se realiza cuando dejas de esperar el momento perfecto y empiezas a crear con lo que tienes ahora. Tu voluntad es una fuerza que el mundo espera.", seeds: ["Nombra lo que quieres crear: las palabras ya son magia.", "Actúa antes de que la mente encuentre mil razones para esperar.", "Tu presencia ya es transformación."]},
-   2: {intro: "La Sacerdotisa guarda tus secretos más profundos: eres un ser de umbral.", body: "Vives entre lo que se ve y lo que se siente. Tu sabiduría no viene de los libros sino de esa voz silenciosa que habla cuando todo calla. Tu camino requiere escucha antes que acción.", seeds: ["Aprende a estar en el no-saber sin ansiedad.", "La respuesta que buscas ya está en ti, solo espera silencio.", "Confía en lo que percibes antes incluso de comprenderlo."]},
-   3: {intro: "La Emperatriz fluye en tu sangre: eres portador de vida, belleza y abundancia.", body: "Tienes el don de hacer crecer lo que tocas — ideas, relaciones, proyectos. Tu propósito florece cuando te permites nutrir y ser nutrido, cuando dejas de contenerte y permites que tu creatividad se derrame en el mundo.", seeds: ["Crea algo cada día, aunque sea pequeño.", "Cuida lo que amas: ahí nace tu poder.", "La abundancia comienza cuando dejas de racionarte a ti mismo."]},
-   4: {intro: "El Emperador es tu columna vertebral: naciste para construir y para sostener.", body: "Tu alma busca estructura no como prisión, sino como cimiento desde el que elevarse. Cuando organizas, cuando estableces límites claros, cuando actúas con disciplina — ahí es donde tu destino toma forma concreta.", seeds: ["Construye un sistema que sostenga tu sueño.", "Los límites que pones son actos de amor hacia ti mismo.", "La disciplina es la forma más alta de libertad."]},
-   5: {intro: "El Hierofante camina contigo: eres un buscador de sentido y un transmisor de sabiduría.", body: "Tu propósito tiene raíces profundas en la tradición y el conocimiento. Estás aquí para aprender y para enseñar, para encontrar el hilo que conecta lo visible con lo invisible. Tu guía interior es más confiable que cualquier autoridad externa.", seeds: ["Busca un maestro — o conviértete en el maestro que hubieras querido tener.", "Estudia lo que te enciende: es tu mapa.", "La sabiduría se transmite viviendo, no solo hablando."]},
-   6: {intro: "Los Enamorados son tu arcano: estás aquí para elegir con todo el corazón.", body: "Tu camino está constelado de encrucijadas profundas. Cada elección que haces con autenticidad te acerca a tu destino; cada elección hecha por miedo te aleja. El amor — por ti mismo, por los demás, por lo que haces — es tu brújula.", seeds: ["Elige lo que te hace sentir entero, no lo que te hace sentir seguro.", "Las relaciones auténticas son espejos de tu propósito.", "Cada encrucijada es una invitación a conocerte más profundamente."]},
+   0: {intro: "Llegaste al mundo con el signo del Loco: un alma que no conoce fronteras trazadas por otros.", body: "Dentro de ti vive un potencial que no se deja encadenar. Tu fuerza no está en la certeza, sino en la capacidad de volver a empezar cada vez como si fuera la primera. Tienes una libertad rara: la de no tener que demostrar nada a nadie.", seeds: ["Confía en el paso que aún no sabes explicar.", "Deja que lo desconocido sea tu territorio natural.", "Cada inicio ya es un cumplimiento."]},
+   1: {intro: "El Mago es tu firma en el universo: estás aquí para transformar la intención en realidad.", body: "Posees todas las herramientas — mente, corazón, palabra, acción. Tu propósito se realiza cuando dejas de esperar el momento justo y empiezas a crear con lo que tienes ahora. Tu voluntad es una fuerza que el mundo espera.", seeds: ["Nombra lo que quieres crear: las palabras ya son magia.", "Actúa antes de que la mente encuentre mil razones para esperar.", "Tu presencia ya es transformación."]},
+   2: {intro: "La Sacerdotisa custodia tus secretos más profundos: eres un ser de umbral.", body: "Vives entre lo que se ve y lo que se siente. Tu sabiduría no viene de los libros sino de esa voz silenciosa que habla cuando todo calla. Tu camino requiere escucha antes de cualquier acción.", seeds: ["Aprende a estar en el no-saber sin ansiedad.", "La respuesta que buscas ya está en ti, solo espera silencio.", "Confía en lo que percibes antes de comprenderlo."]},
+   3: {intro: "La Emperatriz corre por tu sangre: eres portador de vida, belleza y abundancia.", body: "Tienes el don de hacer crecer lo que tocas — ideas, relaciones, proyectos. Tu propósito florece cuando te permites nutrir y ser nutrido, cuando dejas de contenerte y permites que tu creatividad se vierta en el mundo.", seeds: ["Crea algo cada día, aunque sea pequeño.", "Cuida lo que amas: ahí nace tu poder.", "La abundancia comienza cuando dejas de racionarte a ti mismo."]},
+   4: {intro: "El Emperador es tu columna vertebral: naciste para construir y sostener.", body: "Tu alma busca estructura no como prisión, sino como cimientos desde los que elevarse. Cuando organizas, cuando estableces límites claros, cuando actúas con disciplina — ahí tu destino toma forma concreta.", seeds: ["Construye un sistema que sostenga tu sueño.", "Los límites que pones son actos de amor hacia ti mismo.", "La disciplina es la forma más alta de libertad."]},
+   5: {intro: "El Papa camina contigo: eres un buscador de sentido y un transmisor de sabiduría.", body: "Tu propósito tiene raíces profundas en la tradición y el conocimiento. Estás aquí para aprender y enseñar, para encontrar el hilo que conecta lo visible con lo invisible. Tu guía interior es más confiable que cualquier autoridad externa.", seeds: ["Busca un maestro — o conviértete en el maestro que hubieras querido tener.", "Estudia lo que te enciende: es tu mapa.", "La sabiduría se transmite viviendo, no solo hablando."]},
+   6: {intro: "Los Enamorados son tu arcano: estás aquí para elegir con todo el corazón.", body: "Tu camino está lleno de encrucijadas profundas. Cada elección que haces con autenticidad te acerca a tu destino; cada elección hecha por miedo te aleja. El amor — por ti mismo, por los demás, por lo que haces — es tu brújula.", seeds: ["Elige lo que te hace sentir entero, no lo que te hace sentir seguro.", "Las relaciones auténticas son espejos de tu propósito.", "Cada encrucijada es una invitación a conocerte más profundamente."]},
    7: {intro: "El Carro es tu energía: eres un guerrero del destino en marcha.", body: "Tienes una fuerza de voluntad que puede mover montañas. Tu propósito se cumple cuando aprendes a guiar tus energías opuestas — emoción y razón, impulso y estrategia — hacia una única dirección. La victoria ya está escrita, si no te detienes.", seeds: ["Identifica tu dirección y no dejes que nada te distraiga.", "La disciplina no es rigidez: es fidelidad a ti mismo.", "Cada obstáculo es una prueba de tu rumbo, no una negación."]},
    8: {intro: "La Fuerza es tu don oculto: no la fuerza que grita, sino la que susurra.", body: "Estás aquí para demostrar que el mayor coraje es la dulzura. Tu alma sabe cómo domar las bestias interiores — miedos, rabias, sombras — no con violencia sino con presencia. Este es tu poder más raro.", seeds: ["Enfrenta lo que temes con curiosidad en lugar de resistencia.", "Tu vulnerabilidad es tu fuerza más auténtica.", "Sé gentil contigo mismo: de ahí nace todo lo demás."]},
-   9: {intro: "El Ermitaño ilumina tu camino: eres un buscador de verdad solitario y luminoso.", body: "Tu propósito no se encuentra en el ruido del mundo, sino en esos momentos de quietud en que sientes claramente quién eres. Estás aquí para encontrar tu luz interior y luego — cuando estés listo — mostrarla a los demás como faro.", seeds: ["Crea espacios de silencio en tu semana: son tu alimento.", "La soledad no es aislamiento: es el lugar donde te reencuentras.", "Lo que descubriste en la oscuridad es el don que el mundo espera."]},
+   9: {intro: "El Ermitaño ilumina tu camino: eres un buscador de verdad solitario y luminoso.", body: "Tu propósito no se encuentra en el ruido del mundo, sino en esos momentos de quietud en que sientes claramente quién eres. Estás aquí para encontrar tu luz interior y luego — cuando estés listo — mostrarla a los demás como faro.", seeds: ["Crea espacios de silencio en tu semana: son tu alimento.", "La soledad no es aislamiento: es el lugar donde te reencuentras.", "Lo que descubriste en la oscuridad es el regalo que el mundo espera."]},
   10: {intro: "La Rueda del Destino gira contigo: eres un ser de ciclos y transformaciones.", body: "Tu vida no es lineal — es una espiral. Cada caída lleva en sí la semilla del ascenso; cada fin ya es un nuevo comienzo disfrazado. Tu propósito se revela cuando dejas de resistir el movimiento y aprendes a danzar con el cambio.", seeds: ["Observa los ciclos de tu vida: ¿qué se repite? ¿Qué quiere cambiar?", "Permanece en el centro de la rueda: ahí está la paz que no depende de las circunstancias.", "Cada giro del destino te acerca más a quien realmente eres."]},
   11: {intro: "La Justicia es tu código interior: estás aquí para vivir en verdad.", body: "Tu alma tiene un sentido innato del equilibrio. Sientes cuando algo está fuera de lugar — en ti, en las relaciones, en el mundo. Tu propósito se cumple cuando tienes el coraje de decir la verdad, de hacer elecciones alineadas y de recoger con gracia lo que has sembrado.", seeds: ["Actúa siempre como si tu gesto fuera visible al universo.", "Endereza lo que sientes torcido: es tu llamado.", "El equilibrio no es inmovilidad: es un ajuste continuo y consciente."]},
   12: {intro: "El Colgado te mira desde su rama: eres un alma que ve el mundo al revés de los demás.", body: "Tu don es la perspectiva inusual. Donde los demás ven un obstáculo, tú puedes ver un portal. Tus pausas, tus esperas, tus momentos de suspensión no son pérdidas de tiempo: son iluminaciones en gestación.", seeds: ["Deja de forzar: lo que no se mueve necesita madurar.", "Voltea el problema: la solución suele estar en el ángulo que aún no has mirado.", "La espera consciente es una forma de acción profunda."]},
-  13: {intro: "La Muerte camina a tu lado como aliada: eres un maestro de transformaciones.", body: "No temas los finales: son tu especialidad. Cada vez que algo muere en tu vida — una relación, una identidad, un sueño — estás haciendo espacio para algo más verdadero. Tu propósito se cumple en el arte de soltar con gracia.", seeds: ["Identifica lo que ya ha muerto pero sigues manteniendo vivo por miedo.", "Cada final que aceptas con dignidad es un acto de poder.", "Lo que emerge después de cada muerte es siempre más auténtico que antes."]},
-  14: {intro: "La Templanza fluye en tus venas: eres un alquimista del alma.", body: "Tu propósito se encuentra en el arte de mezclar — opuestos, contradicciones, polaridades. No estás hecho para los extremos: estás hecho para encontrar la tercera vía, la que integra sin anular. Tu sanación y la de los demás pasa por esta capacidad rara.", seeds: ["Busca el punto de encuentro entre lo que amas y lo que temes.", "La paciencia no es pasividad: es confianza en el proceso.", "Cada integración que realizas en ti se refleja en el mundo a tu alrededor."]},
-  15: {intro: "El Diablo te tiende un espejo: estás aquí para liberarte y para liberar.", body: "Tus cadenas no están fuera de ti — están dentro. Pero lo extraordinario es que las pusiste tú, y tú puedes quitarlas. Tu propósito más profundo es la liberación: de lo que te limita, de lo que te define por miedo, de lo que consumes en lugar de nutrirte.", seeds: ["Mira de frente lo que te tiene quieto: la conciencia ya es la mitad de la libertad.", "Distingue los deseos que te expanden de los que te contraen.", "Cada sombra que integras se convierte en una fuente de poder auténtico."]},
+  13: {intro: "La Muerte camina a tu lado como aliada: eres un maestro de transformaciones.", body: "No temas los finales: son tu especialidad. Cada vez que algo muere en tu vida — una relación, una identidad, un sueño — estás haciendo espacio para algo más verdadero. Tu propósito se cumple en el arte de soltar con gracia.", seeds: ["Identifica qué ya ha muerto pero sigues manteniendo vivo por miedo.", "Cada final que aceptas con dignidad es un acto de poder.", "Lo que emerge después de cada muerte es siempre más auténtico que antes."]},
+  14: {intro: "La Templanza corre por tus venas: eres un alquimista del alma.", body: "Tu propósito se encuentra en el arte de mezclar — opuestos, contradicciones, polaridades. No estás hecho para los extremos: estás hecho para encontrar la tercera vía, la que integra sin anular. Tu sanación y la de los demás pasa por esta capacidad rara.", seeds: ["Busca el punto de encuentro entre lo que amas y lo que temes.", "La paciencia no es pasividad: es confianza en el proceso.", "Cada integración que realizas en ti se refleja en el mundo a tu alrededor."]},
+  15: {intro: "El Diablo te tiende un espejo: estás aquí para liberarte y liberar.", body: "Tus cadenas no están fuera de ti — están dentro. Pero lo extraordinario es que las pusiste tú, y tú puedes quitarlas. Tu propósito más profundo es la liberación: de lo que te limita, de lo que te define por miedo, de lo que consumes en lugar de nutrirte.", seeds: ["Mira de frente lo que te tiene quieto: la conciencia ya es la mitad de la libertad.", "Distingue los deseos que te expanden de los que te contraen.", "Cada sombra que integras se convierte en una fuente de poder auténtico."]},
   16: {intro: "La Torre es tu iniciación: naciste para construir sobre cimientos verdaderos.", body: "En tu vida ha habido — o habrá — derrumbes repentinos. No son castigos: son liberaciones. Lo que cae ya era falso. Tu propósito emerge precisamente de esos escombros, más claro y más sólido que cualquier estructura que habías construido antes.", seeds: ["Cuando algo se derrumba, pregunta: ¿qué de verdadero queda?", "La verdad que libera siempre es más valiosa que la certeza que aprisiona.", "Reconstruye lentamente, sobre lo que no puede ser destruido."]},
   17: {intro: "Las Estrellas brillan para ti: eres un portador de esperanza en la oscuridad de los demás.", body: "Incluso en los momentos más oscuros, algo en ti sabe que la luz volverá. Esta fe — no ciega, sino vivida — es tu mayor don. Tu propósito se cumple cuando compartes esa esperanza, cuando tu presencia recuerda a los demás que vale la pena continuar.", seeds: ["Cultiva la confianza como se cultiva un jardín: cada día, con cuidado.", "Tus sueños no son huidas de la realidad: son mapas del futuro.", "Sé la estrella que alguien está buscando en el cielo."]},
   18: {intro: "La Luna ilumina tu camino con luz reflejada: eres un navegante del inconsciente.", body: "Vives en un mundo más rico que el que los demás ven. Tus emociones, tus sueños, tus intuiciones son datos reales — no distracciones. Tu propósito se cumple cuando aprendes a navegar estas aguas profundas sin perderte, trayendo a la luz lo que estaba oculto.", seeds: ["Lleva un diario de sueños: tu inconsciente te está hablando.", "Distingue la intuición del miedo: la primera expande, la segunda contrae.", "Lo que emerge de la sombra, si es acogido, se convierte en tu mayor aliado."]},
   19: {intro: "El Sol brilla a través de ti: estás aquí para brillar sin excusas.", body: "Tu energía es contagiosa cuando eres auténtico. Tu propósito se cumple cuando dejas de esconderte, cuando expresas tu alegría sin pedir permiso, cuando tu luz se convierte en una invitación para que los demás hagan lo mismo. No hay nada que ocultar: estás hecho de luz.", seeds: ["Expresa lo que te hace feliz sin justificaciones.", "Tu alegría es un servicio al mundo, no un lujo.", "Celebra cada logro: el reconocimiento de uno mismo es el primer paso hacia la grandeza."]},
-  20: {intro: "El Juicio resuena en tu alma: estás aquí para responder a un llamado más grande.", body: "Hay algo que te llama — una voz que escuchas en los momentos de silencio, un sentido de misión que no puedes ignorar del todo. Tu propósito se cumple cuando dejas de posponer esa respuesta y empiezas a vivir como si tu vida tuviera realmente un significado profundo.", seeds: ["Escucha el llamado que has postergado: sigue ahí, paciente.", "Haz el balance de lo que has vivido: cada experiencia era preparación.", "Renacer no significa olvidar: significa integrar e ir más allá."]},
-  21: {intro: "El Mundo danza contigo: eres un alma que ya tiene todo lo que necesita.", body: "Tu propósito no está en algún lugar del futuro — está aquí, en este momento, en esta vida. Estás llamado a reconocer la completitud de lo que eres, a celebrar el viaje recorrido y a compartir esa plenitud con el mundo. Ya has llegado.", seeds: ["Reconoce lo que ya has realizado: es más de lo que crees.", "La gratitud por el presente es el portal hacia el próximo ciclo.", "Comparte tu plenitud: es el mayor don que puedes ofrecer."]},
+  20: {intro: "El Juicio resuena en tu alma: estás aquí para responder a un llamado más grande.", body: "Hay algo que te llama — una voz que escuchas en los momentos de silencio, un sentido de misión que no puedes ignorar del todo. Tu propósito se cumple cuando dejas de posponer esa respuesta y empiezas a vivir como si tu vida tuviera realmente un significado profundo.", seeds: ["Escucha el llamado que has postergado: sigue ahí, paciente.", "Haz el balance de lo que has vivido: cada experiencia fue preparación.", "Renacer no significa olvidar: significa integrar y seguir adelante."]},
+  21: {intro: "El Mundo danza contigo: eres un alma que ya tiene todo lo que necesita.", body: "Tu propósito no está en algún lugar del futuro — está aquí, en este momento, en esta vida. Estás llamado a reconocer la completitud de lo que eres, a celebrar el viaje recorrido y a compartir esa plenitud con el mundo. Ya has llegado.", seeds: ["Reconoce lo que ya has realizado: es más de lo que crees.", "La gratitud por el presente es el portal hacia el próximo ciclo.", "Comparte tu plenitud: es el mayor regalo que puedes ofrecer."]},
   22: {intro: "El Loco Iniciático cierra el círculo y lo vuelve a abrir: eres un eterno viajero del alma.", body: "Has recorrido todo el viaje de los arcanos y ahora estás de nuevo al principio — pero con toda la sabiduría acumulada. Tu propósito es el salto consciente: no la huida, sino la confianza total en el flujo cósmico. Eres libre de una manera que pocos comprenden.", seeds: ["Integra lo que has aprendido y luego suéltalo.", "El próximo paso no necesita ser explicado: necesita ser vivido.", "La verdadera libertad nace cuando dejas de buscar la seguridad y empiezas a buscar la verdad."]}
 };
 
-/* ── SLIDER ── */
 function showAge(v) {
   v = Number(v);
   const ages = window._md_ages || [];
@@ -251,7 +237,6 @@ function showAge(v) {
   }
 }
 
-/* ── LECTURA POÉTICA HTML ── */
 function buildScopoHTML(label, arcVal) {
   const arc  = arcanaMap[arcVal]  || {name: `Arcano ${arcVal}`};
   const poet = arcanaPoetic[arcVal] || {
@@ -267,8 +252,8 @@ function buildScopoHTML(label, arcVal) {
   };
 
   const contextIntro = {
-    personal: "Esta es la primera capa de tu destino: la fuerza que te mueve desde adentro, el motivo profundo por el que estás aquí. Antes de compartir algo con el mundo, existe esto — tu llama personal.",
-    social:   "Cuando tu llama interior encuentra forma, el mundo empieza a escucharte. El propósito social es la manera en que tu don se derrama en las relaciones, en la comunidad, en la contribución que dejas a los demás.",
+    personal: "Esta es la primera capa de tu destino: la fuerza que te mueve desde adentro, el motivo profundo por el que estás aquí. Antes de compartir algo con el mundo, está esto — tu llama personal.",
+    social:   "Cuando tu llama interior toma forma, el mundo empieza a escucharte. El propósito social es la manera en que tu don se vierte en las relaciones, en la comunidad, en la contribución que dejas a los demás.",
     spiritual:"Más allá de lo personal y lo social, está la resonancia más grande: el propósito espiritual es la síntesis de todo tu camino. Es la conexión con algo que te supera y que, al mismo tiempo, te completa."
   };
 
@@ -284,7 +269,6 @@ function buildScopoHTML(label, arcVal) {
   `;
 }
 
-/* ── LECTURA ACTUAL ── */
 function renderLettura(day, month, year, ages, personale, sociale, spirituale) {
   const today = new Date();
   const birth = new Date(year, month - 1, day);
@@ -309,7 +293,6 @@ function renderLettura(day, month, year, ages, personale, sociale, spirituale) {
   document.getElementById('lettura').style.display = 'block';
 }
 
-/* ── CALCULAR ── */
 function calcola() {
   const d = Number(document.getElementById('day').value);
   const m = Number(document.getElementById('month').value);
@@ -326,26 +309,16 @@ function calcola() {
   const spirituale = reduceTo22(personale + sociale);
 
   document.getElementById('scopoPersonale').innerText  = personale;
-  document.getElementById('terraCielo').innerText      = `Tierra (A+C): ${terra} | Cielo (B+D): ${cielo}`;
+  document.getElementById('notePersonale').innerText   = (arcanaMap[personale] || {name:''}).name;
   document.getElementById('scopoSociale').innerText    = sociale;
-  document.getElementById('discendenze').innerText     = `Paterno: ${paterno} | Materno: ${materno}`;
+  document.getElementById('noteSociale').innerText     = (arcanaMap[sociale]   || {name:''}).name;
   document.getElementById('scopoSpirituale').innerText = spirituale;
+  document.getElementById('noteSpirituale').innerText  = (arcanaMap[spirituale]|| {name:''}).name;
   document.getElementById('output').style.display      = 'block';
 
   const ages = buildAgeSeries_det(letters);
   window._md_ages = ages;
 
-  // grilla décadas
-  const yearGrid = document.getElementById('yearGrid');
-  yearGrid.innerHTML = '';
-  for (let dec = 0; dec <= 80; dec += 10) {
-    const cell = document.createElement('div');
-    cell.className = 'year';
-    cell.innerHTML = `<div style="color:#6b7280; font-weight: 500;">Edad ${dec}</div><b>${ages[dec]}</b>`;
-    yearGrid.appendChild(cell);
-  }
-
-  // lista completa
   const all = document.getElementById('allValues');
   all.innerHTML = '';
   for (let i = 0; i <= 80; i++) {
